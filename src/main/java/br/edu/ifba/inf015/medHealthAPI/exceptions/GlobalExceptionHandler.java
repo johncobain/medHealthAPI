@@ -14,12 +14,19 @@ import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    /*@ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<Map<String,String>> handleUserNodFound(UserNotFoundException ex){
+    @ExceptionHandler(PatientNotFoundException.class)
+    public ResponseEntity<Map<String,String>> handlePatientNodFound(PatientNotFoundException ex){
         Map<String, String> error = new HashMap<>();
         error.put("message", ex.getMessage());
         return ResponseEntity.status(404).body(error);
-    }*/
+    }
+
+    @ExceptionHandler(DoctorNotFoundException.class)
+    public ResponseEntity<Map<String,String>> handleDoctorNodFound(DoctorNotFoundException ex){
+        Map<String, String> error = new HashMap<>();
+        error.put("message", ex.getMessage());
+        return ResponseEntity.status(404).body(error);
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String,Object>> handleValidationExceptions(MethodArgumentNotValidException ex){
