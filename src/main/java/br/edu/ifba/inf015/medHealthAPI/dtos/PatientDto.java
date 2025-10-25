@@ -6,13 +6,10 @@ public record PatientDto(
         Long id,
         String name,
         String email,
-        String phone,
-        String cpf,
-        AddressDto address,
-        String status
+        String cpf
 ) {
     public PatientDto(Patient patient){
-        this(patient.getId(), patient.getName(), patient.getEmail(), patient.getPhone(), patient.getCpf(), AddressDto.fromEntity(patient.getAddress()), patient.getStatus());
+        this(patient.getId(), patient.getName(), patient.getEmail(), patient.getCpf());
     }
 
     public static PatientDto fromEntity(Patient patient){

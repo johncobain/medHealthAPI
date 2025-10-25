@@ -7,22 +7,16 @@ public record DoctorDto(
         Long id,
         String name,
         String email,
-        String phone,
         String crm,
-        AddressDto address,
-        Specialty specialty,
-        String status
+        Specialty specialty
 ) {
     public DoctorDto(Doctor doctor){
         this(
                 doctor.getId(),
                 doctor.getName(),
                 doctor.getEmail(),
-                doctor.getPhone(),
                 doctor.getCrm(),
-                AddressDto.fromEntity(doctor.getAddress()),
-                doctor.getSpecialty(),
-                doctor.getStatus()
+                doctor.getSpecialty()
         );
     }
 
