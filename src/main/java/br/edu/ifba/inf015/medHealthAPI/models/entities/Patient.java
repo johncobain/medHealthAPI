@@ -5,6 +5,7 @@ import br.edu.ifba.inf015.medHealthAPI.models.vos.CPF;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Entity
 @Table(name = "patients")
@@ -27,6 +28,9 @@ public class Patient {
 
     private Timestamp createdAt;
     private Timestamp updatedAt;
+
+    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL)
+    private List<Appointment> appointments;
 
     public Patient() {}
 
@@ -108,5 +112,13 @@ public class Patient {
 
     public void setUpdatedAt(Timestamp updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public List<Appointment> getAppointments() {
+        return appointments;
+    }
+
+    public void setAppointments(List<Appointment> appointments) {
+        this.appointments = appointments;
     }
 }
