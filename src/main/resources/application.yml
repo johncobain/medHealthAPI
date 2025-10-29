@@ -15,3 +15,6 @@ springdoc:
     path: /api-docs
   swagger-ui:
     path: /swagger-ui.html
+server:
+  error:
+    include-stacktrace: never
