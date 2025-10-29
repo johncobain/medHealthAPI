@@ -2,7 +2,6 @@ package br.edu.ifba.inf015.medHealthAPI.models.entities;
 
 import br.edu.ifba.inf015.medHealthAPI.dtos.DoctorFormDto;
 import br.edu.ifba.inf015.medHealthAPI.models.enums.Specialty;
-import br.edu.ifba.inf015.medHealthAPI.models.vos.CRM;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
@@ -17,9 +16,8 @@ public class Doctor {
     private String name;
     private String email;
     private String phone;
-
-    @Embedded
-    private CRM crm;
+    @Column(unique = true)
+    private String crm;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id")
@@ -42,9 +40,25 @@ public class Doctor {
         this.name = doctorFormDto.name();
         this.email = doctorFormDto.email();
         this.phone = doctorFormDto.phone();
-        this.crm = CRM.fromString(doctorFormDto.crm());
+        this.crm = doctorFormDto.crm();
         this.address = new Address(doctorFormDto.address());
         this.specialty = Specialty.valueOf(doctorFormDto.specialty().toUpperCase());
+        this.status = "ACTIVE";
+        Timestamp now = new Timestamp(System.currentTimeMillis());
+        this.createdAt = now;
+        this.updatedAt = now;
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        Timestamp now = new Timestamp(System.currentTimeMillis());
+        this.createdAt = now;
+        this.updatedAt = now;
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = new Timestamp(System.currentTimeMillis());
     }
 
     public Long getId() {
@@ -80,11 +94,11 @@ public class Doctor {
     }
 
     public String getCrm() {
-        return crm.getCrm();
+        return crm;
     }
 
     public void setCrm(String crm) {
-        this.crm = CRM.fromString(crm);
+        this.crm = crm;
     }
 
     public Address getAddress() {

@@ -1,7 +1,7 @@
 CREATE TABLE doctors (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    crm VARCHAR(14) NOT NULL,
+    crm VARCHAR(14) UNIQUE NOT NULL,
     email VARCHAR(255) NOT NULL,
     phone VARCHAR(18) NOT NULL,
     address_id INT NOT NULL,

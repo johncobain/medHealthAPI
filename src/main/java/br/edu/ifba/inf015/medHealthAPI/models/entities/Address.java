@@ -1,7 +1,6 @@
 package br.edu.ifba.inf015.medHealthAPI.models.entities;
 
 import br.edu.ifba.inf015.medHealthAPI.dtos.AddressFormDto;
-import br.edu.ifba.inf015.medHealthAPI.models.vos.ZipCode;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
@@ -18,9 +17,7 @@ public class Address {
     private String street;
     private String number;
     private String complement;
-
-    @Embedded
-    private ZipCode zipCode;
+    private String zipCode;
 
     private Timestamp createdAt;
     private Timestamp updatedAt;
@@ -34,7 +31,7 @@ public class Address {
         this.street = addressFormDto.street();
         this.number = addressFormDto.number();
         this.complement = addressFormDto.complement();
-        this.zipCode = new ZipCode(addressFormDto.zipCode());
+        this.zipCode = addressFormDto.zipCode();
     }
 
     public Long getId() {
@@ -110,10 +107,10 @@ public class Address {
     }
 
     public String getZipCode() {
-        return zipCode.getZipCode();
+        return zipCode;
     }
 
     public void setZipCode(String zipCode) {
-        this.zipCode = new ZipCode(zipCode);
+        this.zipCode = zipCode;
     }
 }

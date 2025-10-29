@@ -1,7 +1,6 @@
 package br.edu.ifba.inf015.medHealthAPI.models.entities;
 
 import br.edu.ifba.inf015.medHealthAPI.dtos.PatientFormDto;
-import br.edu.ifba.inf015.medHealthAPI.models.vos.CPF;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
@@ -16,9 +15,8 @@ public class Patient {
     private String name;
     private String email;
     private String phone;
-
-    @Embedded
-    private CPF cpf;
+    @Column(unique = true)
+    private String cpf;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id")
@@ -38,8 +36,24 @@ public class Patient {
         this.name = patientFormDto.name();
         this.email = patientFormDto.email();
         this.phone = patientFormDto.phone();
-        this.cpf = CPF.fromString(patientFormDto.cpf());
+        this.cpf = patientFormDto.cpf();
         this.address = new Address(patientFormDto.address());
+        this.status = "ACTIVE";
+        Timestamp now = new Timestamp(System.currentTimeMillis());
+        this.createdAt = now;
+        this.updatedAt = now;
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        Timestamp now = new Timestamp(System.currentTimeMillis());
+        this.createdAt = now;
+        this.updatedAt = now;
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = new Timestamp(System.currentTimeMillis());
     }
 
     public Long getId() {
@@ -75,11 +89,11 @@ public class Patient {
     }
 
     public String getCpf() {
-        return cpf.getCpf();
+        return this.cpf;
     }
 
     public void setCpf(String cpf) {
-        this.cpf = CPF.fromString(cpf);
+        this.cpf = cpf;
     }
 
     public Address getAddress() {
