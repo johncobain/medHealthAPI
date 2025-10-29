@@ -1,4 +1,4 @@
-package br.edu.ifba.inf015.medHealthAPI.dtos;
+package br.edu.ifba.inf015.medHealthAPI.dtos.address;
 
 import java.sql.Timestamp;
 

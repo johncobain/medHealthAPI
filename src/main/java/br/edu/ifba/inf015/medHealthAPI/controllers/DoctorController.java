@@ -1,7 +1,7 @@
 package br.edu.ifba.inf015.medHealthAPI.controllers;
 
-import br.edu.ifba.inf015.medHealthAPI.dtos.DoctorDto;
-import br.edu.ifba.inf015.medHealthAPI.dtos.DoctorFormDto;
+import br.edu.ifba.inf015.medHealthAPI.dtos.doctor.DoctorDto;
+import br.edu.ifba.inf015.medHealthAPI.dtos.doctor.DoctorFormDto;
 import br.edu.ifba.inf015.medHealthAPI.models.entities.Doctor;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;

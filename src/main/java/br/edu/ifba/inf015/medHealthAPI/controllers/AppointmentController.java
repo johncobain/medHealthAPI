@@ -1,7 +1,7 @@
 package br.edu.ifba.inf015.medHealthAPI.controllers;
 
-import br.edu.ifba.inf015.medHealthAPI.dtos.AppointmentDto;
-import br.edu.ifba.inf015.medHealthAPI.dtos.AppointmentFormDto;
+import br.edu.ifba.inf015.medHealthAPI.dtos.appointment.AppointmentDto;
+import br.edu.ifba.inf015.medHealthAPI.dtos.appointment.AppointmentFormDto;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

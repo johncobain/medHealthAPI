@@ -1,4 +1,4 @@
-package br.edu.ifba.inf015.medHealthAPI.dtos;
+package br.edu.ifba.inf015.medHealthAPI.dtos.doctor;
 
 import br.edu.ifba.inf015.medHealthAPI.models.entities.Doctor;
 import br.edu.ifba.inf015.medHealthAPI.models.enums.Specialty;

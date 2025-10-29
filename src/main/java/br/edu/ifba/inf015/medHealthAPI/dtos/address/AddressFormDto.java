@@ -1,4 +1,4 @@
-package br.edu.ifba.inf015.medHealthAPI.dtos;
+package br.edu.ifba.inf015.medHealthAPI.dtos.address;
 
 import br.edu.ifba.inf015.medHealthAPI.models.entities.Address;
 import io.swagger.v3.oas.annotations.media.Schema;

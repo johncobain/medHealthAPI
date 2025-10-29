@@ -1,6 +1,6 @@
 package br.edu.ifba.inf015.medHealthAPI.models.entities;
 
-import br.edu.ifba.inf015.medHealthAPI.dtos.DoctorFormDto;
+import br.edu.ifba.inf015.medHealthAPI.dtos.doctor.DoctorFormDto;
 import br.edu.ifba.inf015.medHealthAPI.models.enums.Specialty;
 import jakarta.persistence.*;
 

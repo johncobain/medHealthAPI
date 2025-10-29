@@ -1,6 +1,6 @@
 package br.edu.ifba.inf015.medHealthAPI.models.entities;
 
-import br.edu.ifba.inf015.medHealthAPI.dtos.PatientFormDto;
+import br.edu.ifba.inf015.medHealthAPI.dtos.patient.PatientFormDto;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;

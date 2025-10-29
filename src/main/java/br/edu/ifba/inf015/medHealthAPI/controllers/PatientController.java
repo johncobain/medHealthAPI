@@ -1,11 +1,9 @@
 package br.edu.ifba.inf015.medHealthAPI.controllers;
 
-import br.edu.ifba.inf015.medHealthAPI.dtos.PatientDto;
-import br.edu.ifba.inf015.medHealthAPI.dtos.PatientFormDto;
-import br.edu.ifba.inf015.medHealthAPI.models.entities.Patient;
+import br.edu.ifba.inf015.medHealthAPI.dtos.patient.PatientDto;
+import br.edu.ifba.inf015.medHealthAPI.dtos.patient.PatientFormDto;
 import br.edu.ifba.inf015.medHealthAPI.services.PatientService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import org.springdoc.core.annotations.ParameterObject;

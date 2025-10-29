@@ -1,4 +1,4 @@
-package br.edu.ifba.inf015.medHealthAPI.dtos;
+package br.edu.ifba.inf015.medHealthAPI.dtos.patient;
 
 import br.edu.ifba.inf015.medHealthAPI.models.entities.Patient;
 

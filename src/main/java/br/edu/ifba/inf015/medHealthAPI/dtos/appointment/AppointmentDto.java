@@ -1,5 +1,7 @@
-package br.edu.ifba.inf015.medHealthAPI.dtos;
+package br.edu.ifba.inf015.medHealthAPI.dtos.appointment;
 
+import br.edu.ifba.inf015.medHealthAPI.dtos.doctor.DoctorDto;
+import br.edu.ifba.inf015.medHealthAPI.dtos.patient.PatientDto;
 import br.edu.ifba.inf015.medHealthAPI.models.entities.Appointment;
 
 import java.sql.Timestamp;

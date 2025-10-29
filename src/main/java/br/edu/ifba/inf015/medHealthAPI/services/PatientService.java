@@ -1,7 +1,7 @@
 package br.edu.ifba.inf015.medHealthAPI.services;
 
-import br.edu.ifba.inf015.medHealthAPI.dtos.PatientDto;
-import br.edu.ifba.inf015.medHealthAPI.dtos.PatientFormDto;
+import br.edu.ifba.inf015.medHealthAPI.dtos.patient.PatientDto;
+import br.edu.ifba.inf015.medHealthAPI.dtos.patient.PatientFormDto;
 import br.edu.ifba.inf015.medHealthAPI.exceptions.EntityNotFoundException;
 import br.edu.ifba.inf015.medHealthAPI.exceptions.UniqueAttributeAlreadyRegisteredException;
 import br.edu.ifba.inf015.medHealthAPI.models.entities.Patient;
@@ -9,9 +9,7 @@ import br.edu.ifba.inf015.medHealthAPI.repositories.PatientRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class PatientService {

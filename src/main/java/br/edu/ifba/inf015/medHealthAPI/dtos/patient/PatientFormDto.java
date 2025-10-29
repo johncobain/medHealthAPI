@@ -1,5 +1,6 @@
-package br.edu.ifba.inf015.medHealthAPI.dtos;
+package br.edu.ifba.inf015.medHealthAPI.dtos.patient;
 
+import br.edu.ifba.inf015.medHealthAPI.dtos.address.AddressFormDto;
 import br.edu.ifba.inf015.medHealthAPI.models.entities.Patient;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
