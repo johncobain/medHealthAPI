@@ -1,5 +1,6 @@
 package br.edu.ifba.inf015.medHealthAPI.exceptions;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -14,22 +15,17 @@ import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler(PatientNotFoundException.class)
-    public ResponseEntity<Map<String,String>> handlePatientNodFound(PatientNotFoundException ex){
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<Map<String,String>> handleEntityNotFoundException(EntityNotFoundException ex, HttpServletRequest request){
         Map<String, String> error = new HashMap<>();
-        error.put("message", ex.getMessage());
-        return ResponseEntity.status(404).body(error);
-    }
-
-    @ExceptionHandler(DoctorNotFoundException.class)
-    public ResponseEntity<Map<String,String>> handleDoctorNodFound(DoctorNotFoundException ex){
-        Map<String, String> error = new HashMap<>();
-        error.put("message", ex.getMessage());
-        return ResponseEntity.status(404).body(error);
+        error.put("status", ex.getStatusCode().toString());
+        error.put("reason", ex.getReason());
+        error.put("path", request.getRequestURI());
+        return ResponseEntity.status(ex.getStatusCode()).body(error);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String,Object>> handleValidationExceptions(MethodArgumentNotValidException ex){
+    public ResponseEntity<Map<String,Object>> handleValidationExceptions(MethodArgumentNotValidException ex, HttpServletRequest request){
         Map<String, Object> response = new HashMap<>();
         Map<String, String> errors = new HashMap<>();
 
@@ -39,23 +35,40 @@ public class GlobalExceptionHandler {
             errors.put(fieldName, errorMessage);
         });
 
-        response.put("message", "Validation failed");
+        response.put("status", ex.getStatusCode().toString());
+        response.put("reason", "Validation failed");
+        response.put("path", request.getRequestURI());
         response.put("errors", errors);
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        return ResponseEntity.status(ex.getStatusCode()).body(response);
+    }
+
+    @ExceptionHandler(UniqueAttributeAlreadyRegisteredException.class)
+    public ResponseEntity<Map<String, String>> handleUniqueAttributeAlreadyRegisteredException(UniqueAttributeAlreadyRegisteredException ex, HttpServletRequest request){
+        Map<String, String> error = new HashMap<>();
+        error.put("status", ex.getStatusCode().toString());
+        error.put("reason", ex.getReason());
+        error.put("path", request.getRequestURI());
+        return ResponseEntity.status(ex.getStatusCode()).body(error);
     }
 
     @ExceptionHandler(NoResourceFoundException.class)
-    public ResponseEntity<Map<String, String>> handleNoResourceFoundException(NoResourceFoundException ex){
+    public ResponseEntity<Map<String, String>> handleNoResourceFoundException(NoResourceFoundException ex, HttpServletRequest request){
         Map<String, String> error = new HashMap<>();
-        error.put("message", "Resource not found");
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+        error.put("status", ex.getStatusCode().toString());
+        error.put("reason", "Resource not found");
+        error.put("path", request.getRequestURI());
+        error.put("method", ex.getHttpMethod().toString());
+        return ResponseEntity.status(ex.getStatusCode()).body(error);
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public ResponseEntity<Map<String, String>> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException ex){
+    public ResponseEntity<Map<String, String>> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException ex,  HttpServletRequest request){
         Map<String, String> error = new HashMap<>();
-        error.put("message", "Method not allowed");
-        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(error);
+        error.put("status", ex.getStatusCode().toString());
+        error.put("reason", "Method " + ex.getMethod() + " not allowed");
+        error.put("path", request.getRequestURI());
+        error.put("method", ex.getMethod());
+        return ResponseEntity.status(ex.getStatusCode()).body(error);
     }
 }
