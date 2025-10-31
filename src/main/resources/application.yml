@@ -21,3 +21,7 @@ server:
 info:
   app:
     version: @project.version@
+api:
+  security:
+    token:
+      secret: f153a0b668051fdf01c0549d2f9febe3
