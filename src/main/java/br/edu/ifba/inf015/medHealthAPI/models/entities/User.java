@@ -1,6 +1,7 @@
 package br.edu.ifba.inf015.medHealthAPI.models.entities;
 
 import br.edu.ifba.inf015.medHealthAPI.dtos.user.UserFormDto;
+import br.edu.ifba.inf015.medHealthAPI.models.enums.Roles;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,6 +20,8 @@ public class User implements UserDetails {
 
     private String username;
     private String password;
+    @Enumerated(EnumType.STRING)
+    private Roles role = Roles.ROLE_USER;
 
     @Column(name = "created_at")
     private Timestamp createdAt;
@@ -31,11 +34,21 @@ public class User implements UserDetails {
         Timestamp now = new Timestamp(System.currentTimeMillis());
         this.createdAt = now;
         this.updatedAt = now;
+        if(this.role == null){
+            this.role = Roles.ROLE_USER;
+        }else{
+            this.role = Roles.valueOf(this.role.name());
+        }
     }
 
     @PreUpdate
     protected void onUpdate() {
         this.updatedAt = new Timestamp(System.currentTimeMillis());
+        if (this.role == null) {
+            this.role = Roles.ROLE_USER;
+        } else {
+            this.role = Roles.valueOf(this.role.name());
+        }
     }
 
     public User(){}
@@ -43,6 +56,7 @@ public class User implements UserDetails {
     public User(UserFormDto user){
         this.username = user.username();
         this.password = user.password();
+        this.role = (user.role() == null ? Roles.ROLE_USER : Roles.valueOf(user.role()));
     }
 
     public Long getId() {
@@ -79,7 +93,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        return List.of(new SimpleGrantedAuthority(this.role == null ? Roles.ROLE_USER.name() : this.role.name()));
     }
 
     @Override
@@ -90,5 +104,13 @@ public class User implements UserDetails {
     @Override
     public String getUsername() {
         return this.username;
+    }
+
+    public Roles getRole() {
+        return this.role;
+    }
+
+    public void setRole(String role) {
+        this.role = (role == null ? Roles.ROLE_USER : Roles.valueOf(role));
     }
 }
