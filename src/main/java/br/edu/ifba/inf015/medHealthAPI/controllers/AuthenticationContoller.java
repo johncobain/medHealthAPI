@@ -24,7 +24,7 @@ public class AuthenticationContoller {
 
     @PostMapping
     public ResponseEntity<JWTTokenData> login(@RequestBody AuthenticationData data){
-        var dto = new UsernamePasswordAuthenticationToken(data.username(), data.password());
+        var dto = new UsernamePasswordAuthenticationToken(data.login(), data.password());
         var auth = this.authenticationManager.authenticate(dto);
         var token = this.tokenService.generateToken((User) auth.getPrincipal());
 

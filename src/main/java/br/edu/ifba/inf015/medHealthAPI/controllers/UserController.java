@@ -1,8 +1,10 @@
 package br.edu.ifba.inf015.medHealthAPI.controllers;
 
+import br.edu.ifba.inf015.medHealthAPI.dtos.user.UserDto;
 import br.edu.ifba.inf015.medHealthAPI.dtos.user.UserFormDto;
 import br.edu.ifba.inf015.medHealthAPI.models.entities.User;
 import br.edu.ifba.inf015.medHealthAPI.services.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,7 +21,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody UserFormDto userForm) {
+    public ResponseEntity<UserDto> register(@Valid @RequestBody UserFormDto userForm) {
         return ResponseEntity.ok(userService.register(userForm));
     }
 }

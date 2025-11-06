@@ -71,4 +71,15 @@ public class GlobalExceptionHandler {
         error.put("method", ex.getMethod());
         return ResponseEntity.status(ex.getStatusCode()).body(error);
     }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Map<String, String>> handleGenericException(Exception ex, HttpServletRequest request) {
+        Map<String, String> error = new HashMap<>();
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+
+        error.put("status", String.valueOf(status.value()));
+        error.put("reason", ex.getMessage());
+        error.put("path", request.getRequestURI());
+        return ResponseEntity.status(status).body(error);
+    }
 }

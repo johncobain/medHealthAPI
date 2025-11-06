@@ -4,6 +4,7 @@ import br.edu.ifba.inf015.medHealthAPI.models.entities.User;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,7 @@ public class JWTTokenService {
             var algorithm = Algorithm.HMAC256(secret);
             return JWT.create()
                     .withIssuer("medHealth")
-                    .withSubject(user.getUsername())
+                    .withSubject(user.getEmail())
                     .withExpiresAt(expirationDate())
                     .sign(algorithm);
         }catch (JWTCreationException exception){
@@ -29,7 +30,20 @@ public class JWTTokenService {
         }
     }
 
+    public String getSubject(String tokenJWT){
+        try{
+            var algorithm = Algorithm.HMAC256(secret);
+            return JWT.require(algorithm)
+                    .withIssuer("medHealth")
+                    .build()
+                    .verify(tokenJWT)
+                    .getSubject();
+        }catch (JWTVerificationException exception){
+            throw new RuntimeException("Invalid or expired token");
+        }
+    }
+
     private Instant expirationDate() {
-        return LocalDateTime.now().plusHours(24).toInstant(ZoneOffset.of("-03:00"));
+        return LocalDateTime.now().plusDays(10).toInstant(ZoneOffset.of("-03:00"));
     }
 }

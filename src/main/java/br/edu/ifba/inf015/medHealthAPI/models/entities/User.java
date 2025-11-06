@@ -1,15 +1,16 @@
 package br.edu.ifba.inf015.medHealthAPI.models.entities;
 
 import br.edu.ifba.inf015.medHealthAPI.dtos.user.UserFormDto;
-import br.edu.ifba.inf015.medHealthAPI.models.enums.Roles;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users")
@@ -19,9 +20,17 @@ public class User implements UserDetails {
     private Long id;
 
     private String username;
+    @Column(unique = true)
+    private String email;
     private String password;
-    @Enumerated(EnumType.STRING)
-    private Roles role = Roles.ROLE_USER;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "roles_id")
+    )
+    private final List<Role> roles = new ArrayList<>();
 
     @Column(name = "created_at")
     private Timestamp createdAt;
@@ -34,29 +43,19 @@ public class User implements UserDetails {
         Timestamp now = new Timestamp(System.currentTimeMillis());
         this.createdAt = now;
         this.updatedAt = now;
-        if(this.role == null){
-            this.role = Roles.ROLE_USER;
-        }else{
-            this.role = Roles.valueOf(this.role.name());
-        }
     }
 
     @PreUpdate
     protected void onUpdate() {
         this.updatedAt = new Timestamp(System.currentTimeMillis());
-        if (this.role == null) {
-            this.role = Roles.ROLE_USER;
-        } else {
-            this.role = Roles.valueOf(this.role.name());
-        }
     }
 
     public User(){}
 
     public User(UserFormDto user){
         this.username = user.username();
+        this.email = user.email();
         this.password = user.password();
-        this.role = (user.role() == null ? Roles.ROLE_USER : Roles.valueOf(user.role()));
     }
 
     public Long getId() {
@@ -69,6 +68,14 @@ public class User implements UserDetails {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public void setPassword(String password) {
@@ -93,7 +100,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(this.role == null ? Roles.ROLE_USER.name() : this.role.name()));
+        return this.roles;
     }
 
     @Override
@@ -106,11 +113,11 @@ public class User implements UserDetails {
         return this.username;
     }
 
-    public Roles getRole() {
-        return this.role;
+    public List<Role> getRoles() {
+        return this.roles;
     }
 
-    public void setRole(String role) {
-        this.role = (role == null ? Roles.ROLE_USER : Roles.valueOf(role));
+    public void setRole(Role role) {
+        this.roles.add(role);
     }
 }
