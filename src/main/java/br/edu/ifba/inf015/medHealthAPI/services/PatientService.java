@@ -2,8 +2,10 @@ package br.edu.ifba.inf015.medHealthAPI.services;
 
 import br.edu.ifba.inf015.medHealthAPI.dtos.patient.PatientDto;
 import br.edu.ifba.inf015.medHealthAPI.dtos.patient.PatientFormDto;
+import br.edu.ifba.inf015.medHealthAPI.dtos.patient.PatientUpdateDto;
 import br.edu.ifba.inf015.medHealthAPI.exceptions.EntityNotFoundException;
 import br.edu.ifba.inf015.medHealthAPI.exceptions.UniqueAttributeAlreadyRegisteredException;
+import br.edu.ifba.inf015.medHealthAPI.models.entities.Address;
 import br.edu.ifba.inf015.medHealthAPI.models.entities.Patient;
 import br.edu.ifba.inf015.medHealthAPI.repositories.PatientRepository;
 import jakarta.transaction.Transactional;
@@ -35,5 +37,25 @@ public class PatientService {
             throw new UniqueAttributeAlreadyRegisteredException(Patient.class.getSimpleName(), "CPF");
         }
         return PatientDto.fromEntity(this.patientRepository.save(new Patient(patient)));
+    }
+
+    @Transactional
+    public PatientDto update(PatientUpdateDto patient, Long id){
+      Patient storedPatient = this.patientRepository.findByIdAndStatus(id, "ACTIVE");
+      if (storedPatient == null) throw new EntityNotFoundException(Patient.class.getSimpleName(), id);
+
+      if(patient.name() != null){
+        storedPatient.setName(patient.name());
+      }
+
+      if(patient.phone() != null){
+        storedPatient.setPhone(patient.phone());
+      }
+
+      if(patient.address() != null){
+        storedPatient.setAddress(new Address(patient.address()));
+      }
+
+      return PatientDto.fromEntity(this.patientRepository.save(storedPatient));
     }
 }
