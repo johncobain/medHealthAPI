@@ -47,4 +47,6 @@ public class PatientController {
     public ResponseEntity<PatientDto> create(@Valid @RequestBody PatientFormDto patient) {
         return ResponseEntity.status(201).body(patientService.save(patient));
     }
+
+
 }
