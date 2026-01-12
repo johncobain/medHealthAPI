@@ -58,4 +58,12 @@ public class PatientService {
 
       return PatientDto.fromEntity(this.patientRepository.save(storedPatient));
     }
+
+    @Transactional
+    public PatientDto delete(Long id){
+      Patient storedPatient = this.patientRepository.findByIdAndStatus(id, "ACTIVE");
+      if (storedPatient == null) throw new EntityNotFoundException(Patient.class.getSimpleName(), id);
+      storedPatient.setStatus("INACTIVE");
+      return PatientDto.fromEntity(this.patientRepository.save(storedPatient));
+    }
 }

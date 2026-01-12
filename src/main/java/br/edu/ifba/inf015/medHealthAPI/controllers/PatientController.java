@@ -56,4 +56,10 @@ public class PatientController {
     return ResponseEntity.ok(patientService.update(patient, id));
   }
 
+  @DeleteMapping("/{id}")
+  @Operation(summary = "Delete an Active Patient")
+  @ApiResponse(responseCode = "200")
+  public ResponseEntity<PatientDto> delete(@PathVariable Long id){
+    return ResponseEntity.ok(patientService.delete(id));
+  }
 }
