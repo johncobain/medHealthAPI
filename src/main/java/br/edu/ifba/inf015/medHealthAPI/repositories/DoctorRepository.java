@@ -13,4 +13,5 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
     Doctor findByEmailAndStatus(String email, String status);
 
     boolean existsByCrm(String crm);
+    boolean existsByCrmAndStatus(String crm, String status);
 }
