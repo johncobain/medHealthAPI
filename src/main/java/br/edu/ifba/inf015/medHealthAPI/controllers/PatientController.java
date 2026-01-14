@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,7 +47,7 @@ public class PatientController {
   @Operation(summary = "Create a new Patient")
   @ApiResponse(responseCode = "201")
   public ResponseEntity<PatientDto> create(@Valid @RequestBody PatientFormDto patient) {
-    return ResponseEntity.status(201).body(patientService.save(patient));
+    return ResponseEntity.status(HttpStatus.CREATED).body(patientService.save(patient));
   }
 
   @PutMapping("/{id}")

@@ -33,9 +33,19 @@ public class PatientService {
 
     @Transactional
     public PatientDto save(PatientFormDto patient){
-        if (this.patientRepository.existsByCpf(patient.cpf())){
+        if (this.patientRepository.existsByCpfAndStatus(patient.cpf(), "ACTIVE")){
             throw new UniqueAttributeAlreadyRegisteredException(Patient.class.getSimpleName(), "CPF");
         }
+
+        if (this.patientRepository.existsByCpfAndStatus(patient.cpf(), "INACTIVE")){
+          Patient storedPatient = this.patientRepository.findByCpfAndStatus(patient.cpf(), "INACTIVE");
+          storedPatient.setStatus("ACTIVE");
+          storedPatient.setName(patient.name());
+          storedPatient.setPhone(patient.phone());
+          storedPatient.setAddress(new Address(patient.address()));
+          return PatientDto.fromEntity(this.patientRepository.save(storedPatient));
+        }
+
         return PatientDto.fromEntity(this.patientRepository.save(new Patient(patient)));
     }
 
