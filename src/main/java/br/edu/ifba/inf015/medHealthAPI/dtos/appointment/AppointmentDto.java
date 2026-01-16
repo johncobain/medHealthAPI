@@ -3,11 +3,13 @@ package br.edu.ifba.inf015.medHealthAPI.dtos.appointment;
 import br.edu.ifba.inf015.medHealthAPI.dtos.doctor.DoctorDto;
 import br.edu.ifba.inf015.medHealthAPI.dtos.patient.PatientDto;
 import br.edu.ifba.inf015.medHealthAPI.models.entities.Appointment;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.sql.Timestamp;
 
 public record AppointmentDto (
     Long id,
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "UTC")
     Timestamp date,
     DoctorDto doctor,
     PatientDto patient,

@@ -1,7 +1,9 @@
 package br.edu.ifba.inf015.medHealthAPI.models.entities;
 
+import br.edu.ifba.inf015.medHealthAPI.dtos.appointment.AppointmentFormDto;
 import jakarta.persistence.*;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 
 @Entity
@@ -25,6 +27,9 @@ public class Appointment {
     private Timestamp updatedAt;
 
     public Appointment() {
+      Timestamp now = new Timestamp(System.currentTimeMillis());
+      this.createdAt = now;
+      this.updatedAt = now;
     }
 
     public Long getId() {
