@@ -2,6 +2,7 @@ package br.edu.ifba.inf015.medHealthAPI.controllers;
 
 import br.edu.ifba.inf015.medHealthAPI.dtos.appointment.AppointmentDto;
 import br.edu.ifba.inf015.medHealthAPI.dtos.appointment.AppointmentFormDto;
+import br.edu.ifba.inf015.medHealthAPI.dtos.cancelation.CancellationFormDto;
 import br.edu.ifba.inf015.medHealthAPI.services.AppointmentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -52,5 +53,13 @@ public class AppointmentController {
   public ResponseEntity<AppointmentDto> create(@Valid @RequestBody AppointmentFormDto appointmentFormDto) {
     AppointmentDto appointment = appointmentService.schedule(appointmentFormDto);
     return ResponseEntity.status(HttpStatus.CREATED).body(appointment);
+  }
+
+  @PostMapping("/{appointmentId}/cancel")
+  @Operation(summary = "Cancel an appointment")
+  @ApiResponse(responseCode = "204")
+  public ResponseEntity<Void> cancel(@PathVariable Long appointmentId, @Valid @RequestBody CancellationFormDto cancellationFormDto){
+    appointmentService.cancel(appointmentId, cancellationFormDto);
+    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
   }
 }

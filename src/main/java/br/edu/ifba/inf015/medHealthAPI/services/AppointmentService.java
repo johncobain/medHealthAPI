@@ -2,14 +2,19 @@ package br.edu.ifba.inf015.medHealthAPI.services;
 
 import br.edu.ifba.inf015.medHealthAPI.dtos.appointment.AppointmentDto;
 import br.edu.ifba.inf015.medHealthAPI.dtos.appointment.AppointmentFormDto;
+import br.edu.ifba.inf015.medHealthAPI.dtos.cancelation.CancellationFormDto;
 import br.edu.ifba.inf015.medHealthAPI.exceptions.EntityNotFoundException;
 import br.edu.ifba.inf015.medHealthAPI.models.entities.Appointment;
+import br.edu.ifba.inf015.medHealthAPI.models.entities.Cancellation;
 import br.edu.ifba.inf015.medHealthAPI.models.entities.Doctor;
 import br.edu.ifba.inf015.medHealthAPI.models.entities.Patient;
+import br.edu.ifba.inf015.medHealthAPI.models.enums.CancellationReason;
 import br.edu.ifba.inf015.medHealthAPI.repositories.AppointmentRepository;
+import br.edu.ifba.inf015.medHealthAPI.repositories.CancellationRepository;
 import br.edu.ifba.inf015.medHealthAPI.repositories.DoctorRepository;
 import br.edu.ifba.inf015.medHealthAPI.repositories.PatientRepository;
 import br.edu.ifba.inf015.medHealthAPI.services.validations.AppointmentValidator;
+import br.edu.ifba.inf015.medHealthAPI.services.validations.CancellationValidator;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,13 +32,17 @@ public class AppointmentService {
   private final AppointmentRepository appointmentRepository;
   private final PatientRepository patientRepository;
   private final DoctorRepository doctorRepository;
+  private final CancellationRepository cancellationRepository;
   private final List<AppointmentValidator> validators;
+  private final List<CancellationValidator> cancellationValidators;
 
-  public AppointmentService(AppointmentRepository appointmentRepository, PatientRepository patientRepository, DoctorRepository doctorRepository, List<AppointmentValidator> validators){
+  public AppointmentService(AppointmentRepository appointmentRepository, PatientRepository patientRepository, DoctorRepository doctorRepository, CancellationRepository cancellationRepository, List<AppointmentValidator> validators, List<CancellationValidator> cancellationValidators){
     this.appointmentRepository = appointmentRepository;
     this.patientRepository = patientRepository;
     this.doctorRepository = doctorRepository;
+    this.cancellationRepository = cancellationRepository;
     this.validators = validators;
+    this.cancellationValidators = cancellationValidators;
   }
 
   public Page<AppointmentDto> getAll(Pageable pageable, Long doctorId, Long patientId, String status, Timestamp startDate, Timestamp endDate){
@@ -57,6 +66,28 @@ public class AppointmentService {
     appointment.setStatus("SCHEDULED");
 
     return AppointmentDto.fromEntity(appointmentRepository.save(appointment));
+  }
+
+  @Transactional
+  public void cancel(Long appointmentId, CancellationFormDto cancellationFormDto){
+    Appointment appointment = appointmentRepository.findById(appointmentId)
+        .orElseThrow(() -> new EntityNotFoundException(Appointment.class.getSimpleName(), appointmentId));
+
+    if("CANCELED".equalsIgnoreCase(appointment.getStatus())){
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Appointment has already been canceled.");
+    }
+
+    cancellationValidators.forEach(v -> v.validate(appointment));
+
+    if(cancellationFormDto.reason() == CancellationReason.OTHER && (cancellationFormDto.message() == null || cancellationFormDto.message().isBlank())){
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Message is required when reason is 'OUTROS'.");
+    }
+
+    appointment.setStatus("CANCELED");
+    appointmentRepository.save(appointment);
+
+    Cancellation cancellation = new Cancellation(appointment, cancellationFormDto.reason(), cancellationFormDto.message());
+    cancellationRepository.save(cancellation);
   }
 
   private Doctor chooseDoctor(AppointmentFormDto dto){
